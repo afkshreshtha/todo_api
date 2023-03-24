@@ -14,7 +14,7 @@ router.post('/register', register)
 
 router.post('/login', login)
 
-router.post('/logout', isAuthenticated, logout)
+router.get('/logout', isAuthenticated, logout)
 
 router.get('/me', isAuthenticated, getOneUser)
 
