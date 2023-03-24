@@ -8,7 +8,7 @@ export const register = async (req, res, next) => {
     const { name, email, password } = req.body
     let user = await User.findOne({ email })
 
-    if (!user) return next(new ErrorHandler('User not found', 400))
+    if (user) return next(new ErrorHandler('User Already Exists', 400))
 
     const hashPaasword = await bcrypt.hash(password, 10)
     user = await User.create({
@@ -27,7 +27,7 @@ export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body
     const user = await User.findOne({ email }).select('+password')
-    if (!user) return next(new ErrorHandler('User not found', 400))
+    if (!user) return next(new ErrorHandler('Invalid Email or Password', 400))
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch)
       return next(new ErrorHandler('Invalid Email or Password', 400))
@@ -47,7 +47,7 @@ export const logout = (req, res) => {
     })
     .json({
       success: true,
-      message:"User successfully Logged out"
+      message: 'User successfully Logged out',
     })
 }
 
